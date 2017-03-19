@@ -2,16 +2,13 @@
 toxicity = {}
 
 toxicity.checknames = [
-	"BooleanExpressionComplexity", 
-	"ClassDataAbstractionCoupling", 
-	"ClassFanOutComplexity",
-	"CyclomaticComplexity",
-	"FileLength",
-	"MethodLength",
-	"NestedIfDepth",
-	"AnonInnerLength",
-	"ParameterNumber",
-	"MissingSwitchDefault"
+	"complexity",
+	"default-case",
+	"max-depth",
+	"max-lines",
+	"max-nested-callbacks",
+	"max-params",
+	"max-statements"
 ];
 
 toxicity.colors = [
@@ -21,10 +18,7 @@ toxicity.colors = [
 	"#6D5A8D",
 	"#5396AC",
 	"#CE8743",
-	"#96A9CD",
-	"#C79593",
-	"#BCCA98",
-	"#E9C197"
+	"#96A9CD"
 ];
 
 toxicity.calc = function(xmldoc) {
@@ -35,7 +29,7 @@ toxicity.calc = function(xmldoc) {
 toxicity.calcfile = function(fnode, fidx) {
 		var path = $(fnode).attr("name").replace(/\\/g, "/");
 		var result = {
-			_name: path.split("/").slice(-1)[0], 
+			_name: path.split("/").slice(-1)[0],
 			_path: path,
 			total: 0
 		};
@@ -55,8 +49,8 @@ toxicity.draw = function(scores) {
 	var BGAP = 2;
 	var LEFTSPACE = 25;
 
-	scores.sort(function(da, db) { return db.total - da.total })
-		
+	scores.sort(function(da, db) { return db.total - da.total });
+
 	var checks = d3.layout.stack()(toxicity.checknames.map(function(checkname) {
 		return scores.map(function(d, i) {
 			return { x: i, y: d[checkname] || 0, score: d };
@@ -82,7 +76,7 @@ toxicity.draw = function(scores) {
 		.scale(yscale)
 		.orient("left")
 		.ticks(10);
-		
+
 	var fscale = d3.scale.ordinal().range(toxicity.colors);
 
 	chart.selectAll("line")
@@ -94,7 +88,7 @@ toxicity.draw = function(scores) {
 		.attr("y2", yscale)
 		.style("stroke", "#ccc");
 
-  var groups = chart.selectAll("g.checks")
+	var groups = chart.selectAll("g.checks")
 		.data(checks)
 		.enter().append("g")
 		.attr("class", "check")
@@ -109,13 +103,13 @@ toxicity.draw = function(scores) {
 		.attr("height", function(d) { return CHEIGHT - yscale(d.y); })
 		.attr("width", function(d) { return BWIDTH; })
 		.call(tooltip(function(d) { return d.score; }));
-					
+
 	chart.append("g")
 		.attr("class", "axis")
 		.attr("transform", "translate(" + LEFTSPACE + ", 0)")
 		.call(yaxis);
-}
 
+}
 
 tooltip = function(a) {
 
@@ -127,11 +121,11 @@ tooltip = function(a) {
 				if (accessor) {
 					d = accessor(d);
 				}
-			 	var div = d3.select("#chart-wrapper").selectAll("div.tooltip");
+				var div = d3.select("#chart-wrapper").selectAll("div.tooltip");
 				if (div.empty()) {
-				 	div = d3.select("#chart-wrapper").append("div").attr("class", "tooltip").style("opacity", 0);
+					div = d3.select("#chart-wrapper").append("div").attr("class", "tooltip").style("opacity", 0);
 				}
-			  div.html("");
+				div.html("");
 				div.append("h2").text(d._name);
 				div.append("p").attr("class", "filename").text(d._path.split("/").slice(0, -1).join("/"));
 				$(toxicity.checknames.slice(0).reverse()).each(function(i, c) {
@@ -158,11 +152,11 @@ tooltip = function(a) {
 				if (hclip > 0) {
 					ttx -= hclip
 				}
-				div.style("left", Math.max(ttx + 4, $(window).scrollLeft() + 5) + "px")     
+				div.style("left", Math.max(ttx + 4, $(window).scrollLeft() + 5) + "px")
 					 .style("top", Math.max(tty, $(window).scrollTop() + 5) + "px");
 				div.transition().duration(100).style("opacity", 0.95);
 			})
-			.on("mouseout", function(d) {       
+			.on("mouseout", function(d) {
 				div = d3.select("body").select("div.tooltip")
 				div.transition().duration(250).style("opacity", 0);
 			});
@@ -170,6 +164,3 @@ tooltip = function(a) {
 
 	return tooltip;
 };
-
-
-

@@ -19,9 +19,9 @@
 			var reader = new FileReader();
 			reader.onload = function(loadEvent) {
 				var xmldoc = $.parseXML(loadEvent.target.result)
-				toxicity.draw(toxicity.calc(xmldoc))		
+				toxicity.draw(toxicity.calc(xmldoc))
 			}
-			reader.readAsText(selEvent.target.files[0]); 
+			reader.readAsText(selEvent.target.files[0]);
 		};
 		$('input[type=file]').change(load);
 		</script>
@@ -29,8 +29,8 @@
 		<div id="chart-wrapper">
 		</div>
 
-		<p>Hover over the bars to see detailed information about the score for the class.
-			
+		<p>Hover over the bars to see detailed information about the score for the module.
+
 		<p>The y-axis is fixed with 41 as a maximum to make it easier to compare charts for different code-bases.
 
 	</body>
